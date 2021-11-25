@@ -2,6 +2,7 @@
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace WebApi.Controllers
 {
@@ -19,21 +20,31 @@ namespace WebApi.Controllers
             return Ok(_unitOfWork.Developers.GetPopularDevelopers(count));
         }
         [HttpPost]
+        [Route("save")]
         public IActionResult AddDeveloperAndProject()
         {
-            var developer = new Developer
+            try
             {
-                Followers = 35,
-                Name = "Mukesh Murugan"
-            };
-            var project = new Project
+                var developer = new Developer
+                {
+                    Followers = 35,
+                    Name = "Mukesh Murugan"
+                };
+                var project = new Project
+                {
+                    Name = "codewithmukesh"
+                };
+                _unitOfWork.Developers.Add(developer);
+              //  throw new Exception("general error");
+                _unitOfWork.Projects.Add(project);
+                _unitOfWork.Complete();
+                return Ok();
+            }
+            catch (Exception ex)
             {
-                Name = "codewithmukesh"
-            };
-            _unitOfWork.Developers.Add(developer);
-            _unitOfWork.Projects.Add(project);
-            _unitOfWork.Complete();
-            return Ok();
+                _unitOfWork.Dispose();
+                return BadRequest(ex.Message);
+            }
         }
 
     }

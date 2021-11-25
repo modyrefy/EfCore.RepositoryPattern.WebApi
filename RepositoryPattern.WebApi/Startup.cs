@@ -1,5 +1,6 @@
 using DataAccess.EFCore;
 using DataAccess.EFCore.Repositories;
+using DataAccess.EFCore.UnitOfWorks;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -39,7 +40,7 @@ namespace RepositoryPattern.WebApi
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<IProjectRepository, ProjectRepository>();
             services.AddTransient<IDeveloperRepository, DeveloperRepository>();
-            services.AddTransient<IUnitOfWork,IUnitOfWork>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
